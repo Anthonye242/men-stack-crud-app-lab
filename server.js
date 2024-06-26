@@ -26,12 +26,16 @@ app.get('/', (req, res) => {
 });
 
 app.get('/cars/new', (req, res) => {
-  res.render('new.ejs');
+  res.render('new.ejs', { car: null });
 });
 
 app.post('/cars', async (req, res) => {
-  await Car.create(req.body);
-  res.redirect('/cars');
+  try {
+    await Car.create(req.body);
+    res.redirect('/cars');
+  } catch (error) {
+    res.render('new.ejs', { car: null, error: error.message });
+  }
 });
 
 app.get('/cars', async (req, res) => {
@@ -40,31 +44,48 @@ app.get('/cars', async (req, res) => {
 });
 
 app.get('/cars/:id', async (req, res) => {
-  const car = await Car.findById(req.params.id);
-  if (car) {
-    res.render('cars.ejs', { car, cars: null });
-  } else {
+  try {
+    const car = await Car.findById(req.params.id);
+    if (car) {
+      res.render('cars.ejs', { car, cars: null });
+    } else {
+      res.status(404).send('Car not found');
+    }
+  } catch (error) {
     res.status(404).send('Car not found');
   }
 });
 
 app.get('/cars/:id/edit', async (req, res) => {
-  const car = await Car.findById(req.params.id);
-  if (car) {
-    res.render('new.ejs', { car });
-  } else {
+  try {
+    const car = await Car.findById(req.params.id);
+    if (car) {
+      res.render('new.ejs', { car });
+    } else {
+      res.status(404).send('Car not found');
+    }
+  } catch (error) {
     res.status(404).send('Car not found');
   }
 });
 
 app.post('/cars/:id', async (req, res) => {
-  await Car.findByIdAndUpdate(req.params.id, req.body);
-  res.redirect('/cars');
+  try {
+    await Car.findByIdAndUpdate(req.params.id, req.body);
+    res.redirect('/cars');
+  } catch (error) {
+    const car = await Car.findById(req.params.id);
+    res.render('new.ejs', { car, error: error.message });
+  }
 });
 
 app.post('/cars/:id/delete', async (req, res) => {
-  await Car.findByIdAndDelete(req.params.id);
-  res.redirect('/cars');
+  try {
+    await Car.findByIdAndDelete(req.params.id);
+    res.redirect('/cars');
+  } catch (error) {
+    res.status(404).send('Car not found');
+  }
 });
 
 app.listen(PORT, () => {
