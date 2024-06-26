@@ -3,30 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add New Car</title>
+    <title>Edit Car</title>
 </head>
 <body>
-    <h1>Add New Car</h1>
-    <form action="/cars" method="POST">
+    <h1>Edit Car</h1>
+    <form action="/cars/<%= car._id %>" method="POST">
         <label for="make">Make:</label>
-        <input type="text" name="make" required><br>
+        <input type="text" name="make" value="<%= car.make %>" required><br>
         <label for="model">Model:</label>
-        <input type="text" name="model" required><br>
+        <input type="text" name="model" value="<%= car.model %>" required><br>
         <label for="year">Year:</label>
-        <input type="number" name="year" required><br>
+        <input type="number" name="year" value="<%= car.year %>" required><br>
         <label for="color">Color:</label>
-        <input type="text" name="color" required><br>
+        <input type="text" name="color" value="<%= car.color %>" required><br>
         <label for="price">Price:</label>
-        <input type="number" name="price" required><br>
+        <input type="number" name="price" value="<%= car.price %>" required><br>
         <label for="totalMiles">Total Miles:</label>
-        <input type="number" name="totalMiles" required><br>
+        <input type="number" name="totalMiles" value="<%= car.totalMiles %>" required><br>
         <label for="fuelType">Fuel Type:</label>
         <select name="fuelType" required>
-            <option value="electric">Electric</option>
-            <option value="gas">Gas</option>
-            <option value="hybrid">Hybrid</option>
+            <option value="electric" <%= car.fuelType === 'electric' ? 'selected' : '' %>>Electric</option>
+            <option value="gas" <%= car.fuelType === 'gas' ? 'selected' : '' %>>Gas</option>
+            <option value="hybrid" <%= car.fuelType === 'hybrid' ? 'selected' : '' %>>Hybrid</option>
         </select><br>
-        <button type="submit">Add Car</button>
+        <button type="submit">Update Car</button>
     </form>
+    <a href="/cars">Back to all cars</a>
 </body>
 </html>
